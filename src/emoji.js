@@ -26,9 +26,9 @@ async function prepareEmojis() {
   const getEmojiLine = ({ chars, tags }) => {
     const wrapper = document.createElement("div");
     const span = document.createElement("span");
-    span.setAttribute("title", tags.join(" "));
-    span.innerHTML = chars;
-    wrapper.appendChild(span);
+    span.setAttribute("size", "0");
+    span.innerHTML = tags.join(" ");
+    wrapper.append(span, " ", chars);
     return wrapper.innerHTML;
   };
 
