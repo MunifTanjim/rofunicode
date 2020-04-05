@@ -11,8 +11,12 @@
   "bugs": "https://github.com/MunifTanjim/rofunicode/issues",
   "license": "MIT",
   "author": "Munif Tanjim (https://muniftanjim.dev)",
+  "files": [
+    "bin"
+  ],
   "repository": "https://github.com/MunifTanjim/rofunicode",
   "devDependencies": {
-    "jsdom": "^16.2.2"
+    "jsdom": "^16.2.2",
+    "node-fetch": "^2.6.0"
   }
 }

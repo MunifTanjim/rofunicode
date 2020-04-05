@@ -1,7 +1,8 @@
-const { prepareEmojis } = require("./emoji");
+const { prepareEmojis, updateEmojiModiferBase } = require("./emoji");
 
 async function init() {
   await prepareEmojis();
+  await updateEmojiModiferBase();
 }
 
 init()
