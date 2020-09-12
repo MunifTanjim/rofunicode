@@ -17,6 +17,6 @@
   "repository": "https://github.com/MunifTanjim/rofunicode",
   "devDependencies": {
     "jsdom": "^16.2.2",
-    "node-fetch": "^2.6.0"
+    "node-fetch": "^2.6.1"
   }
 }
