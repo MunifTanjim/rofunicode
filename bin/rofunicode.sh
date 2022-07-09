@@ -6,6 +6,8 @@ ROFUNICODE_EMOJI_MODIFIER_BASE="☝⛹✊✋✌✍🎅🏂🏃🏄🏇🏊🏋�
 
 ROFUNICODE_CACHE_DIR="${XDG_CACHE_HOME:-"${HOME}/.cache"}/rofunicode"
 ROFUNICODE_CONFIG_DIR="${XDG_CONFIG_HOME:-"${HOME}/.config"}/rofunicode"
+ROFUNICODE_CONFIG_FILE="${ROFUNICODE_CONFIG_DIR}/config.sh"
+ROFUNICODE_THEME_FILE="${ROFUNICODE_CONFIG_DIR}/theme.rasi"
 
 function ensure_dir() {
   if [ ! -d "${1}" ]; then
@@ -17,11 +19,9 @@ function file_exists() {
   test -f "${1}"
 }
 
-function load_config() {
-  local -r config_file="${ROFUNICODE_CONFIG_DIR}/config.sh"
-
-  if ! file_exists "${config_file}"; then
-    cat > "${config_file}" <<EOL
+function ensure_config() {
+  if ! file_exists "${ROFUNICODE_CONFIG_FILE}"; then
+    cat > "${ROFUNICODE_CONFIG_FILE}" <<EOL
 #!/usr/bin/env sh
 
 export ROFUNICODE_DATA_FILENAMES="emojis"
@@ -29,8 +29,19 @@ export ROFUNICODE_PROMPT="Emoji"
 export ROFUNICODE_SKIN_TONE="neutral" # neutral/light/medium-light/medium/medium-dark/dark
 EOL
   fi
+}
 
-  . "${config_file}"
+function ensure_theme() {
+  if ! file_exists "${ROFUNICODE_THEME_FILE}"; then
+    cat > "${ROFUNICODE_THEME_FILE}" <<EOL
+listview {
+  cycle: true;
+  scrollbar: true;
+  columns: 10;
+  lines: 10;
+}
+EOL
+  fi
 }
 
 function accepts_skin_tone_modifier() {
@@ -74,9 +85,15 @@ function rofunicode() {
     exit 1
   fi
 
+  local rofi_version="$(rofi -version)"
+
   local selection
 
-  selection=$(cat "${data_files[@]}" | rofi -dmenu -markup-rows -i -columns 10 -lines 10 -p "${prompt}" | awk '{ print $NF }' | tr -d '\n')
+  if [[ "${rofi_version}" == *"1.7."* ]]; then
+    selection=$(cat "${data_files[@]}" | rofi -dmenu -markup-rows -i -theme-str "@import \"${ROFUNICODE_THEME_FILE}\"" -p "${prompt}" | awk '{ print $NF }' | tr -d '\n')
+  else
+    selection=$(cat "${data_files[@]}" | rofi -dmenu -markup-rows -i -columns 10 -lines 10 -p "${prompt}" | awk '{ print $NF }' | tr -d '\n')
+  fi
 
   if accepts_skin_tone_modifier "${selection}"; then
     selection=$(apply_skin_tone_modifier "${selection}" "${skin_tone}")
@@ -87,7 +104,9 @@ function rofunicode() {
 
 ensure_dir "${ROFUNICODE_CACHE_DIR}"
 ensure_dir "${ROFUNICODE_CONFIG_DIR}"
+ensure_config
+ensure_theme
 
-load_config
+source "${ROFUNICODE_CONFIG_FILE}"
 
 rofunicode

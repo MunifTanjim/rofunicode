@@ -28,6 +28,19 @@ export ROFUNICODE_PROMPT="Emoji"
 export ROFUNICODE_SKIN_TONE="dark" # neutral/light/medium-light/medium/medium-dark/dark
 ```
 
+Rofunicode theme file is located at `~/.config/rofunicode/theme.rasi`:
+
+```rasi
+listview {
+  cycle: true;
+  scrollbar: true;
+  columns: 10;
+  lines: 10;
+}
+```
+
+The theme file is used for `rofi v1.7.x`.
+
 ## Usage
 
 Run the `rofunicode.sh` script and do whatever you want with the picked unicode character.
