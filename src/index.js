@@ -1,8 +1,10 @@
 const { prepareEmojis, updateEmojiModiferBase } = require("./emoji");
 
+const unicodeVersion = "13.0.0";
+
 async function init() {
-  await prepareEmojis();
-  await updateEmojiModiferBase();
+  await prepareEmojis(unicodeVersion);
+  await updateEmojiModiferBase(unicodeVersion);
 }
 
 init()

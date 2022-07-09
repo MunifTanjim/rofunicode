@@ -26,11 +26,10 @@ function getHexNumbersInRange(start, end) {
   return integers.map((number) => number.toString(16).toUpperCase());
 }
 
-async function getEmojiDataTxt() {
-  const emojiDataUrl =
-    "https://unicode.org/Public/13.0.0/ucd/emoji/emoji-data.txt";
+async function getEmojiDataTxt(unicodeVersion) {
+  const emojiDataUrl = `https://unicode.org/Public/${unicodeVersion}/ucd/emoji/emoji-data.txt`;
 
-  const cacheFilepath = path.join(cacheDir, "emoji-data.txt");
+  const cacheFilepath = path.join(cacheDir, `emoji-data-${unicodeVersion}.txt`);
 
   if (fs.existsSync(cacheFilepath)) {
     return fs.readFileSync(cacheFilepath, "utf8");
@@ -39,13 +38,13 @@ async function getEmojiDataTxt() {
   const response = await fetch(emojiDataUrl, { method: "GET" });
   const dataTxt = await response.text();
 
-  fs.writeFileSync(cacheFilepath, txt);
+  fs.writeFileSync(cacheFilepath, dataTxt);
 
   return dataTxt;
 }
 
-async function updateEmojiModiferBase() {
-  const txt = await getEmojiDataTxt();
+async function updateEmojiModiferBase(unicodeVersion) {
+  const txt = await getEmojiDataTxt(unicodeVersion);
 
   const codes = txt.split("\n").reduce((codes, line) => {
     const match = line.match(
@@ -76,10 +75,12 @@ async function updateEmojiModiferBase() {
   fs.writeFileSync(rofunicodeScriptPath, newRofunicodeScriptContent);
 }
 
-async function getEmojiListDOM() {
-  const emojiListUrl = "https://unicode.org/emoji/charts-13.0/emoji-list.html";
+async function getEmojiListDOM(unicodeVersion) {
+  unicodeVersion = unicodeVersion.split(".").slice(0, 2).join(".");
 
-  const filepath = path.join(cacheDir, "emoji-list.html");
+  const emojiListUrl = `https://unicode.org/emoji/charts-${unicodeVersion}/emoji-list.html`;
+
+  const filepath = path.join(cacheDir, `emoji-list-${unicodeVersion}.html`);
 
   if (fs.existsSync(filepath)) {
     return JSDOM.fromFile(filepath);
@@ -92,10 +93,10 @@ async function getEmojiListDOM() {
   return dom;
 }
 
-async function prepareEmojis() {
+async function prepareEmojis(unicodeVersion) {
   const {
     window: { document },
-  } = await getEmojiListDOM();
+  } = await getEmojiListDOM(unicodeVersion);
 
   const getEmojiLine = ({ chars, tags }) => {
     const wrapper = document.createElement("div");
@@ -135,7 +136,8 @@ async function prepareEmojis() {
 
   const content = emojis.join("\n");
 
-  fs.writeFileSync(path.join(dataDir, "emojis.txt"), content);
+  fs.writeFileSync(path.join(dataDir, `emojis-${unicodeVersion}.txt`), content);
+  fs.writeFileSync(path.join(dataDir, `emojis.txt`), content);
 }
 
 module.exports.prepareEmojis = prepareEmojis;
