@@ -62,7 +62,17 @@ function apply_skin_tone_modifier() {
 }
 
 function rofunicode() {
-  local data_filenames
+  while [[ $# -gt 0 ]]; do
+    case $1 in
+      clear-cache)
+        rm -rf "${ROFUNICODE_CACHE_DIR:?}"/*
+        exit 0
+        ;;
+      *)
+        shift;;
+    esac
+  done
+
   IFS=',' read -r -a data_filenames <<< "${ROFUNICODE_DATA_FILENAMES:-"emojis"}"
   local -r prompt="${ROFUNICODE_PROMPT:-"Emoji"}"
   local -r skin_tone="${ROFUNICODE_SKIN_TONE:-""}"
@@ -109,4 +119,4 @@ ensure_theme
 
 source "${ROFUNICODE_CONFIG_FILE}"
 
-rofunicode
+rofunicode $@

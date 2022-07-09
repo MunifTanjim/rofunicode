@@ -49,6 +49,12 @@ Run the `rofunicode.sh` script and do whatever you want with the picked unicode 
 ~/.local/bin/rofunicode.sh | xsel -i --clipboard
 ```
 
+Run the following command to clear cached data:
+
+```sh
+~/.local/bin/rofunicode.sh clear-cache
+```
+
 ## Screenshot
 
 ![Emoji Picker](screenshots/emoji-smile.png)
