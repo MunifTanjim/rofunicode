@@ -5,7 +5,7 @@
 Just download the `rofunicode.sh` script whereever you want and give it executable permission:
 
 ```sh
-curl --progress-bar https://raw.githubusercontent.com/MunifTanjim/rofunicode/master/bin/rofunicode.sh -o ~/.local/bin/rofunicode.sh
+curl --progress-bar https://raw.githubusercontent.com/MunifTanjim/rofunicode/main/bin/rofunicode.sh -o ~/.local/bin/rofunicode.sh
 chmod u+x ~/.local/bin/rofunicode.sh
 ```
 

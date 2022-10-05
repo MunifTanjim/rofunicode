@@ -81,7 +81,7 @@ function rofunicode() {
 
   for data_filename in "${data_filenames[@]}"; do
     local -r data_file="${ROFUNICODE_CACHE_DIR}/${data_filename}.txt"
-    local -r data_url="https://raw.githubusercontent.com/MunifTanjim/rofunicode/master/data/${data_filename}.txt"
+    local -r data_url="https://raw.githubusercontent.com/MunifTanjim/rofunicode/main/data/${data_filename}.txt"
 
     if [ ! -f "${data_file}" ]; then
       curl -LsSf -o "${data_file}" "${data_url}"
